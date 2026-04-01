@@ -14,14 +14,6 @@ export default function Navbar() {
     const {user, setUser} = useAuthStore();
     console.log(user);
 
-    const handleLogin = () => {
-        setUser(
-            {
-                name: "buiquangcong",
-                avatar: "https://th.bing.com/th/id/OIP.sRfvOBXwamQc5-vTYQJPFQHaIX?w=189&h=213&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"
-            }
-        )
-    }
     return (
         <nav className="bg-blue-600 text-white shadow">
             <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -42,18 +34,24 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden md:flex items-center space-x-6">
+                    {user ? (
+                        <>
+                            <span>User: {user?.name || "Guest"}</span>
+                            <Link to="#" onClick={() => setUser(null)} >
+                                <button className="bg-red-600 text-white px-4 py-2 rounded">Đăng xuất</button>
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="">
+                            <button className="bg-blue-500 border text-white px-4 py-2 rounded">Đăng nhập</button>
+                            </Link>
+                            <Link to="/register" className="">
+                            <button className="bg-white text-black px-4 py-2 rounded">Đăng ký</button>
+                            </Link>
+                        </>
+                    )}
                     <Switch checked={themeContext?.isDarkMode} onChange={themeContext?.toggleTheme} checkedChildren="Dark" unCheckedChildren="Light" />
-                    <span>User: {user?.name || "Guest"}</span>
-                    <Link to="/login" onClick={handleLogin} className="hover:text-gray-200">
-                        Đăng nhập
-                    </Link>
-                    <Link to="#" onClick={() => setUser(null)} className="hover:text-gray-200">
-                        Đăng xuất
-                    </Link>
-                    <Link to="/register" className="hover:text-gray-200">
-                        Đăng ký
-                    </Link>
-
                 </div>
             </div>
         </nav>

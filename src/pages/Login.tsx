@@ -16,7 +16,6 @@ const Login = () => {
         },
         onSuccess: (res) => {
             setUser(res.data.user)
-            localStorage.setItem("accessToken",res.data.accessToken)
             toast.success("Đăng Nhập thành công")
             navigate("/list")
         },
