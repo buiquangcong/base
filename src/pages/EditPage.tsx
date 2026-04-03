@@ -1,9 +1,8 @@
 import { Button, Form, Input, Select } from "antd";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useStoryList } from "../hooks/useStoryList";
+import { useParams } from "react-router-dom";
+import { useCRUD } from "../hooks/useCRUD";
 
 interface books {
   title: string
@@ -13,39 +12,24 @@ interface books {
 }
 
 function EditPage() {
-  const navigate = useNavigate()
-  const { id } = useParams()
   const [form] = Form.useForm()
-
-  const { data } = useQuery({
-    queryKey: ['books', id],
-    queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/books/${id}`)
-      return res.data
-    }
-  })
+  const {id} = useParams()
+  const { data: list } = useStoryList()
   useEffect(() => {
-    if (data) {
-      form.setFieldsValue(data)
-    }
-  }, [data, form])
+    if (list && id) {
+      const fetchBook = list.find((item: any) => item.id == id);
 
-  const { mutate } = useMutation({
-    mutationFn: async (data) => {
-      await axios.put(`http://localhost:3000/books/${id}`, data)
-    },
-    onSuccess: () => {
-      toast.success('sua thanh cong')
-      navigate('/list')
-    },
-    onError: () => {
-      toast.error('sua that bai')
+      if (fetchBook) {
+        form.setFieldsValue(fetchBook);
+      }
     }
-  })
+  }, [list,id, form]) 
+
+  const { Edit } = useCRUD()
   return (
     <div>
       <h1>Cập nhật</h1>
-      <Form layout="vertical" form={form} className="space-y-6" onFinish={mutate}>
+      <Form layout="vertical" form={form} className="space-y-6" onFinish={Edit}>
         {/* Text input */}
         <Form.Item label="ten sach" name="title" rules={[{ required: true }]}>
           <Input placeholder="nhap ten sach" />

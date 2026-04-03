@@ -3,14 +3,12 @@ import { Image, Table, Button, Popconfirm, Space } from "antd";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useStoryList } from "../hooks/useStoryList";
 
 
 function ListPage() {
   const navigate = useNavigate()
-  const {data, isLoading} = useQuery({
-    queryKey: ['books'],
-    queryFn: () => axios.get('http://localhost:3000/books').then((res)=> res.data)
-  })
+  const {data} = useStoryList()
   const reload = useQueryClient()
   const {mutate} = useMutation({
     mutationFn: async(id: number) => {
@@ -68,7 +66,7 @@ function ListPage() {
     <div className="p-6">
       <h1 className="text-2xl font-semibold mb-6">Danh sách</h1>
       <div className="overflow-x-auto">
-        <Table columns={columns} dataSource={data} loading={isLoading} />
+        <Table columns={columns} dataSource={data}  />
       </div>
     </div>
   );
